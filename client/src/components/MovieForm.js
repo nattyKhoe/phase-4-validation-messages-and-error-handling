@@ -16,22 +16,22 @@ function MovieForm() {
     female_director: false,
   });
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
-    fetch("/movies", {
+    const response = await fetch("/movies", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(formData),
-    })
-      .then((response) =>{
-        if (response.ok){
-          response.json().then(movie=> console.log(movie));
-        } else {
-          response.json().then(errorData=> setErrors(errorData.errors));
-        }
-      });
+    });
+    //returns a Promise, we must await it 
+    const data = await response.json();
+    if (response.ok){
+      console.log("Movie create:", data);
+    } else{
+      setErrors(data.errors)
+    }
   }
 
   function handleChange(e) {
